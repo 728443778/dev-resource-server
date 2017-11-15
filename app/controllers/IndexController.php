@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\models\Clients;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
-use SebastianBergmann\CodeCoverage\Util;
 use sevenUtils\resources\DevManager\Utils;
 
 class IndexController extends Controller
@@ -14,6 +13,7 @@ class IndexController extends Controller
 
     /**
      * @param $dispatcher Dispatcher
+     * @return boolean
      */
     public function beforeExecuteRoute($dispatcher)
     {
@@ -33,6 +33,12 @@ class IndexController extends Controller
             $this->responseJson(ERROR_NONE);
             return false;
         }
+        if ($token != md5($client->access_token . $accessAt)) {
+            $this->responseJson(ERROR_APP_ACCESS_AUTH_FAILED);
+            return false;
+        }
+        $this->client = $client;
+        return true;
     }
 
     protected function responseJson($code = ERROR_NONE, $data = [])
