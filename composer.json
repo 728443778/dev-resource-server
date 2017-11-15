@@ -9,6 +9,6 @@
     "ext-mongodb": "^1.2.0",
     "ext-phalcon":">=3.2",
     "mongodb/mongodb": "^1.1",
-    "728443778/php-utils":"dev-master",
+    "728443778/php-utils":"dev-master"
   }
 }
