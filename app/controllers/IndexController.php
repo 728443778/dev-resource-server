@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Phalcon\Mvc\Controller;
+use SebastianBergmann\CodeCoverage\Util;
 use sevenUtils\resources\DevManager\Utils;
 
 class IndexController extends Controller
@@ -20,6 +21,8 @@ class IndexController extends Controller
                 return $this->deleteBucket();
             case Utils::OPERATION_CREATE_BUCKET:
                 return $this->createBucket();
+            case Utils::OPERATION_GET_OBJECT:
+                return $this->getObject();
             default:
                 return $this->responseJson(ERROR_OPERATION_FAILED);
         }
@@ -33,5 +36,10 @@ class IndexController extends Controller
     protected function createBucket()
     {
         $bucket = $this->request->getPost('bucket');
+    }
+
+    protected function getObject()
+    {
+
     }
 }
