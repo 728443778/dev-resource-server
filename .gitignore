@@ -1,0 +1,8 @@
+/src
+/vendor
+/.phalcon
+composer.lock
+/cache
+/.idea
+/storage
+/public/index.html
