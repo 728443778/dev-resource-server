@@ -18,6 +18,14 @@ class Application extends \Phalcon\Mvc\Application
 
     public $requestId;
 
+    public static function getApp()
+    {
+        if (!static::$app) {
+            static::$app = new static();
+        }
+        return static::$app;
+    }
+
     public function __construct(DiInterface $dependencyInjector = null)
     {
         parent::__construct($dependencyInjector);

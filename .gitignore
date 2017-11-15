@@ -6,3 +6,4 @@ composer.lock
 /.idea
 /storage
 /public/index.html
+/client_resources

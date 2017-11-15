@@ -16,14 +16,14 @@ $di = new CliDI();
 include APP_PATH . '/config/loader.php';
 
 // Create a console application
-$console = new ConsoleApp();
+$application = new ConsoleApp();
 
 /**
  * Read services
  */
 include APP_PATH . '/config/services.php';
 
-$console->setDI($di);
+$application->setDI($di);
 
 /**
  * 因为目前 没有对配置文件进行优化，所以需要重写这个dispatcher
@@ -51,7 +51,7 @@ foreach ($argv as $k => $arg) {
 
 try {
     // Handle incoming arguments
-    $console->handle($arguments);
+    $application->handle($arguments);
 } catch (\Exception $e) {
     fwrite(STDERR, $e->getMessage() . PHP_EOL);
     exit(1);

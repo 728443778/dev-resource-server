@@ -1,5 +1,5 @@
 {
-  "name": "user-center",
+  "name": "resource-server",
   "type": "project",
   "require-dev" : {
     "phpunit/phpunit":">=6.4.3"
@@ -10,6 +10,5 @@
     "ext-phalcon":">=3.2",
     "mongodb/mongodb": "^1.1",
     "728443778/php-utils":"dev-master",
-    "aliyuncs/oss-sdk-php": "~2.0"
   }
 }
