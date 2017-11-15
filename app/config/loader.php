@@ -24,7 +24,8 @@ $loader->registerNamespaces([
 $loader->registerFiles([
     APP_PATH . '/ErrorCode.php',
     BASE_PATH . '/vendor/mongodb/mongodb/src/functions.php',
-    BASE_PATH . '/vendor/728443778/php-utils/src/ErrorCode.php'
+    BASE_PATH . '/vendor/728443778/php-utils/src/ErrorCode.php',
+    BASE_PATH . '/vendor/728443778/php-utils/src/resources/DevManager/Utils.php',
 ]);
 
 $loader->register();
