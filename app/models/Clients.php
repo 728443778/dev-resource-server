@@ -39,6 +39,8 @@ class Clients extends \Phalcon\Mvc\Model
      */
     public $status;
 
+    public $save_root;
+
     /**
      * Initialize method for model.
      */
@@ -46,6 +48,7 @@ class Clients extends \Phalcon\Mvc\Model
     {
         $this->setSchema("resource-server");
         $this->setSource("clients");
+        $this->save_root = $this->getDI()->getConfig()->save_path;
     }
 
     /**

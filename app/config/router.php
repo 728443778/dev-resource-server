@@ -5,10 +5,11 @@
  */
 $router = $di->getRouter();
 
-$router->addPost('/send-sms', 'index::sendSms');
-$router->addPost('/register', 'index::register');
-$router->addPost('/login', 'index::login');
-$router->addPost('/app-login', 'index::appLogin');
+$router->add('/object/([a-z0-9A-Z_-]+)', [
+    'controller' => 'index',
+    'action' => 'get',
+    'params' => 1
+]);
 
 // Define your routes here
 
