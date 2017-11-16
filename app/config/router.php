@@ -6,7 +6,7 @@
 $router = $di->getRouter();
 
 $router->add('/object/([a-z0-9A-Z_-]+)', [
-    'controller' => 'index',
+    'controller' => 'object',
     'action' => 'get',
     'params' => 1
 ]);

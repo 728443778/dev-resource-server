@@ -6,7 +6,6 @@ use app\libs\Application;
 use app\models\Clients;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\Url;
 use sevenUtils\resources\DevManager\Utils;
 
 class IndexController extends Controller
@@ -31,9 +30,9 @@ class IndexController extends Controller
             return false;
         }
         $client = Clients::findFirst([
-            'condition' => 'access_id=?0 and status=1',
+            'conditions' => 'access_id=?0 and status=1',
             'limit' => 1,
-            'bind' => [$clienId],
+            'bind' => [ 0 =>$clienId],
             'cache' => [
                 'key' => 'client-' . $clienId,
                 'lifetime' => 3600
@@ -41,6 +40,10 @@ class IndexController extends Controller
         ]);
         if (!$client) {
             $this->responseJson(ERROR_NONE);
+            return false;
+        }
+        if (($accessAt + 5) < Application::getApp()->getRequestTime()) {
+            $this->responseJson(ERROR_APP_ACCESS_AUTH_FAILED);
             return false;
         }
         if ($token != md5($client->access_token . $accessAt)) {
@@ -202,26 +205,5 @@ class IndexController extends Controller
         $object = str_replace('..', '', $object);
         $file = $path . '/' . $object;
         return $this->response->setFileToSend($file);
-    }
-
-    public function actionGet()
-    {
-        $params = $this->request->get('params');
-        $params =  Application::getApp()->decrypt($params);
-        $params = json_decode($params, true);
-        if (!isset($params['access_id']) || !isset($params['object']) || !isset($params['timeout'])
-            || !isset($params['sign_at'])) {
-            return $this->responseJson(ERROR_ACCESS_FORBIDDEN);
-        }
-        if (!$params['timeout']) {
-            $time = Application::getApp()->getRequestTime();
-            $duration = $params['timeout'] + $params['sign_at'];
-            if ($duration < $time) {
-                return $this->responseJson(ERROR_ACCESS_FORBIDDEN);
-            }
-        }
-        $client = new Clients();
-        $path = $client->save_root . '/' . $params['access_id'] . '/' . $params['object'];
-        return $this->response->setFileToSend($path);
     }
 }
