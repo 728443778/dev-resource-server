@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\libs\Application;
 use app\models\Clients;
 use Phalcon\Mvc\Controller;
+use sevenUtils\resources\DevManager\Utils;
 
 class ObjectController extends Controller
 {
@@ -12,11 +13,11 @@ class ObjectController extends Controller
     {
         $params =  Application::getApp()->decrypt($params);
         $params = json_decode($params, true);
-        if (!isset($params['access_id']) || !isset($params['object']) || !isset($params['timeout'])
+        if (!isset($params['access_id']) || !isset($params['object']) || !isset($params['timeout']) || !isset($params['bucket'])
             || !isset($params['sign_at'])) {
             return $this->responseJson(ERROR_ACCESS_FORBIDDEN);
         }
-        if (!$params['timeout']) {
+        if ($params['timeout']) {
             $time = Application::getApp()->getRequestTime();
             $duration = $params['timeout'] + $params['sign_at'];
             if ($duration < $time) {
@@ -24,7 +25,10 @@ class ObjectController extends Controller
             }
         }
         $client = new Clients();
-        $path = $client->save_root . '/' . $params['access_id'] . '/' . $params['object'];
+        $path = $client->save_root . '/' . $params['access_id'] . '/' .$params['bucket'] . '/' . $params['object'];
+        $mime = Utils::getMimeTypeByExtension($path);
+        $this->response->setHeader('Content-Type', $mime);
+        $this->response->sendHeaders();
         return $this->response->setFileToSend($path);
     }
 

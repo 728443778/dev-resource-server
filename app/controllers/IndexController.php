@@ -112,20 +112,22 @@ class IndexController extends Controller
         $url = [
             'access_id' => $this->client->access_id,
             'object' => $object,
-            'timeout' => $timeOut,
-            'sign_at' => Application::getApp()->getRequestTime()
+            'bucket' => $bucket,
         ];
-        $url = Application::getApp()->encrypt(json_decode($url));
-        $url = $host . '/object/' . $url;
+        if ($timeOut) {
+            $url['timeout'] = $timeOut;
+            $url['sign_at'] = Application::getApp()->getRequestTime();
+        }
+        $url = Application::getApp()->encrypt(json_encode($url));
+        $url = 'http://' . $host . '/object/' . $url;
         return $this->responseJson(ERROR_NONE, ['url' => $url]);
     }
 
     protected function uploadObject()
     {
-        $bucket = $this->request->getPost('bucket');
         $path = $this->client->save_root . '/' . $this->client->access_id;
-        $bucket = str_replace('.', '', $bucket);
-        $bucket = str_replace('/', '', $bucket);
+        $bucket = $this->getRequestBucket();
+        $objectName = $this->getRequestObject();
         $path = $path . '/' . $bucket;
         if (!is_dir($path)) {
             return $this->responseJson(ERROR_BUCKET_NOT_EXISTS);
@@ -138,7 +140,6 @@ class IndexController extends Controller
         if ($file->getError()) {
             return $this->responseJson($file->getError());
         }
-        $objectName = $file->getName();
         if (empty($objectName)) {
             return $this->responseJson(ERROR_OBJECT_NAME_INVALID);
         }
@@ -180,13 +181,14 @@ class IndexController extends Controller
             return $this->responseJson(ERROR_REQUEST_DATA_INVALID);
         }
         $path = $this->client->save_root . '/' . $this->client->access_id;
-        if (file_exists($path)) {
+        if (!is_dir($path)) {
             return $this->responseJson(ERROR_OPERATION_FAILED);
         }
         $mode = 0770;
         if ($acl == Utils::ACL_TYPE_PUBLIC_READ) {
             $mode = 0775;
         }
+        $path = $path . '/' . $bucket;
         if (!mkdir($path, $mode)) {
             return $this->responseJson(ERROR_OPERATION_FAILED);
         }
