@@ -55,7 +55,10 @@ class ObjectController extends Controller
         if (!is_file($file)) {
             return $this->responseJson(ERROR_OBJECTS_DOES_NOT_EXISTS);
         }
-        Utils::phpSendFile($file);
+        $mime = Utils::getMimeTypeByExtension($file);
+        $this->response->setFileToSend($file);
+        $this->response->resetHeaders();
+        $this->response->setContentType($mime);
         return $this->response;
     }
 
